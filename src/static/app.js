@@ -20,11 +20,27 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const spotsLeft = details.max_participants - details.participants.length;
 
+        // Participants section as a pretty bulleted list
+        let participantsHTML = '';
+        if (details.participants && details.participants.length > 0) {
+          participantsHTML = `
+            <ul class="participants-list">
+              ${details.participants.map(p => `<li>${p}</li>`).join('')}
+            </ul>
+          `;
+        } else {
+          participantsHTML = '<p class="no-participants">No participants yet.</p>';
+        }
+
         activityCard.innerHTML = `
           <h4>${name}</h4>
           <p>${details.description}</p>
           <p><strong>Schedule:</strong> ${details.schedule}</p>
           <p><strong>Availability:</strong> ${spotsLeft} spots left</p>
+          <div class="participants-section">
+            <strong>Participants:</strong>
+            ${participantsHTML}
+          </div>
         `;
 
         activitiesList.appendChild(activityCard);
@@ -80,6 +96,40 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error("Error signing up:", error);
     }
   });
+
+  // Add styles for participants section
+  const style = document.createElement('style');
+  style.innerHTML = `
+    .participants-section {
+      margin-top: 12px;
+      padding: 10px;
+      background: #e3eafc;
+      border-radius: 4px;
+      border: 1px solid #c5cae9;
+    }
+    .participants-section strong {
+      color: #3949ab;
+      display: block;
+      margin-bottom: 6px;
+    }
+    .participants-list {
+      margin-left: 18px;
+      margin-bottom: 0;
+      color: #222;
+      font-size: 15px;
+    }
+    .participants-list li {
+      margin-bottom: 3px;
+      list-style-type: disc;
+    }
+    .no-participants {
+      color: #888;
+      font-style: italic;
+      margin: 0;
+      padding-left: 2px;
+    }
+  `;
+  document.head.appendChild(style);
 
   // Initialize app
   fetchActivities();
